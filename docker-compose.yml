@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  file_manager_redis:
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data:/data
+    command: redis-server --appendonly yes --dir /data
+
+  file_manager_mongoddb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=file_manager
+    volumes:
+      - ./data:/data/db
+ 
+  file_manager_mongo_express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: file_manager_mongoddb
